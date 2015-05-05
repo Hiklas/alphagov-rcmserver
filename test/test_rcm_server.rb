@@ -1,28 +1,30 @@
-
-require 'rcm/rcmServer'
-require 'minitest/autorun'
+require 'util/logger'
+require 'rcmServer'
+require 'test/unit'
 require 'rack/test'
 
-class MyAppTest < Minitest::Test
+class RCMServerAppTest < Test::Unit::TestCase
+
+  @@log = Util::LoggerLikeJava.new("RCMServerAppTest")
+
   include Rack::Test::Methods
 
   def app
+    @@log.debug("Returning RCMServer class")
     RCM::RCMServer
   end
 
   def test_status
+    @@log.debug("Testing status")
     get '/status'
+    assert_equal '{ "status": "Testing status" }', last_response.body
+  end
+
+  def test_status_with_params
+    @@log.debug("Testing status with parameters")
+    get '/status', :name => 'Frank'
     assert_equal 'Testing status', last_response.body
   end
 
-  def test_with_params
-    get '/meet', :name => 'Frank'
-    assert_equal 'Hello Frank!', last_response.body
-  end
-
-  def test_with_rack_env
-    get '/', {}, 'HTTP_USER_AGENT' => 'Songbird'
-    assert_equal "You're using Songbird!", last_response.body
-  end
 end
 

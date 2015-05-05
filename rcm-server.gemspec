@@ -14,9 +14,10 @@ Gem::Specification.new do |s|
   s.authors = ["Fiona Bianchi"]
   s.email   = ["fiona.bianchi@dwp.gsi.gov.uk"]
 
-  s.files = `svn ls -R`.split("\n")
+  s.files         = Dir['LICENSE.md', 'README.md', 'lib/**/*']
+  s.test_files    = Dir['test/**/*.rb']
 
-  s.add_development_dependency 'rake-compiler', '>= 10.3.2'
+  s.add_development_dependency 'rake', '>= 10.3.2'
   s.add_runtime_dependency 'eventmachine', '>= 1.0.3'
   s.add_runtime_dependency 'sinatra', '>=1.4.5'
   s.add_runtime_dependency 'sinatra-contrib', '>=1.4.2'
@@ -25,7 +26,7 @@ Gem::Specification.new do |s|
 
 
   s.summary = 'RCM Back-end server'
-  s.description = "Fancy GUI for the application status pages"
+  s.description = "RCM back-end server prototype"
 
   s.rdoc_options = ["--title", "RCM Server", "--main", "README.md", "-x", "lib/rcm/version"]
 end

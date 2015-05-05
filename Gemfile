@@ -1,3 +1,4 @@
+source 'http://rubygems.org'
 gemspec
 
 gem 'eventmachine', '>=1.0.3'

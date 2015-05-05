@@ -9,12 +9,25 @@ module RCM
 
 	class RCMServer < Sinatra::Base
 
+		RCM_CONFIG_ENV = 'RCM_CONFIG_FILENAME'
+		DEFAULT_CONFIG_FILENAME = 'conf/rcm-server.yaml'
+
+
 		@@log = Util::LoggerLikeJava.new("RCMServer")
+
+		##
+		#
+		# We need a bootstrap for this filename to load our config
+		#
+		def self.get_config_filename
+			ENV[RCM_CONFIG_ENV] ||= DEFAULT_CONFIG_FILENAME
+		end
+
 
 		configure do
 
 			# This must be passed in using rackup -e "\$configFilename='<filename>'"
-			configFilename = $configFilename
+			configFilename = get_config_filename
 
 			@@log.debug("Loading yaml config from '#{configFilename}'...")
 
@@ -38,14 +51,9 @@ module RCM
 
 
 		get '/status' do
-			returnJson = get_server_status
+			returnJson = "{ '' }"
 			[ 200, returnJson ]
 		end
-
-
-		private
-
-
 
 	end
 
