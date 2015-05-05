@@ -17,13 +17,13 @@ class RCMServerAppTest < Test::Unit::TestCase
   def test_status
     @@log.debug("Testing status")
     get '/status'
-    assert_equal '{ "status": "Testing status" }', last_response.body
+    assert_equal '{ "status" : "Testing status" }', last_response.body
   end
 
   def test_status_with_params
     @@log.debug("Testing status with parameters")
     get '/status', :name => 'Frank'
-    assert_equal 'Testing status', last_response.body
+    assert_equal '{ "status" : "Testing status" }', last_response.body
   end
 
 end

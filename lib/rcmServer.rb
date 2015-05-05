@@ -51,7 +51,7 @@ module RCM
 
 
 		get '/status' do
-			returnJson = "{ '' }"
+			returnJson = '{ "status" : "Testing status" }'
 			[ 200, returnJson ]
 		end
 
