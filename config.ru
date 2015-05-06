@@ -4,4 +4,4 @@ require 'rcmServer'
 
 use Rack::Static, :urls => ['/html', '/javascript', '/css'], :root => 'public'
 
-run RCMServer
+run RCM::RCMServer
