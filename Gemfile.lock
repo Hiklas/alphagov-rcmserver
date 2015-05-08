@@ -1,8 +1,11 @@
 GEM
   remote: http://rubygems.org/
   specs:
+    addressable (2.3.8)
     backports (3.6.4)
     eventmachine (1.0.7)
+    json-schema (2.5.1)
+      addressable (~> 2.3.7)
     multi_json (1.11.0)
     rack (1.6.0)
     rack-protection (1.5.3)
@@ -27,6 +30,7 @@ PLATFORMS
 
 DEPENDENCIES
   eventmachine (>= 1.0.3)
+  json-schema
   rack (>= 1.5.2)
   rack-test
   sinatra (>= 1.4.5)
