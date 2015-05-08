@@ -2,6 +2,7 @@ require 'sinatra/base'
 require 'sinatra/jsonp'
 require 'util/logger'
 require 'json'
+require 'json-schema'
 require 'yaml'
 
 

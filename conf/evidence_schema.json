@@ -1,0 +1,29 @@
+{
+  "title" : "Evidence Schema",
+  "type" : "object",
+  "properties" : {
+
+    "claimant" : {
+      "type" : "object",
+      "required" : true,
+      "properties" : {
+        "name" : {
+          "type" : "string"
+        }
+      }
+    },
+
+    "partner" : {
+      "type" : "object",
+      "required" : false,
+      "properties" : {
+        "name" : {
+          "type" : "string"
+        }
+      }
+
+    }
+
+  }
+
+}

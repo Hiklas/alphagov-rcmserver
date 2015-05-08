@@ -38,6 +38,14 @@ class RCMServerAppTest < Test::Unit::TestCase
     assert(lastCode == 400, "We got the wrong return code: #{lastCode}")
   end
 
+
+  def test_submit_with_larger_body
+    @@log.debug("Testing submit data with slightly larger body")
+    post '/submitEvidence', '              ', 'Content Type' => 'application/json'
+    lastCode = last_response.status
+    assert(lastCode == 200, "We got the wrong return code: #{lastCode}")
+  end
+
   def test_status_no_html
     @@log.debug("Testing status contains no html")
     get '/status'
@@ -55,6 +63,8 @@ class RCMServerAppTest < Test::Unit::TestCase
     get '/wibble_blah_blergh'
     check_json_in_body
   end
+
+  private
 
   ##
   #
