@@ -1,9 +1,7 @@
 evidence_schema: conf/evidence_schema.json
 email:
-  delivery_method: smtp
+  delivery_method: test
   smtp_server:
   smtp_port:
   username:
   password:
-
-

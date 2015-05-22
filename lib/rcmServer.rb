@@ -8,9 +8,14 @@ require 'yaml'
 module RCM
 
 	class SubmitException < Exception
-
 	end
 
+
+	##
+	#
+	# Application class for RCM server
+	#
+	#
 	class RCMServer < Sinatra::Base
 
 		RCM_CONFIG_ENV = 'RCM_CONFIG_FILENAME'
@@ -30,6 +35,46 @@ module RCM
 		end
 
 
+		def self.get_mail_config_method
+			(ENV["RACK_ENV"] == "production") ? "environment" : "config"
+		end
+
+		def self.configureEmail
+			config_method = get_mail_config_method
+			case config_method
+
+				when "production"
+					configureEmail_environment
+
+				when "config"
+					configureEmail_config
+
+				else
+					@@log.error("Didn't recognise configure method for email: #{config_method}")
+			end
+		end
+
+
+		def self.configureEmail_environment
+
+
+		end
+
+
+		def self.configureEmail_config
+
+		end
+
+
+		def initialize
+			super
+			@@log.debug("RCMServer Instance created")
+		end
+
+		##
+		#
+		# Configure the Sinatra Application
+		#
 		configure do
 
 			# This must be passed in using rackup -e "\$configFilename='<filename>'"
@@ -39,6 +84,9 @@ module RCM
 
 			@@config = YAML::load(File.read(configFilename))
 
+			# TODO: Currently we have to be messy and load config from environment variables OR config file
+			configureEmail
+
 			@@log.debug("... loaded")
 
 
@@ -47,7 +95,6 @@ module RCM
 			# Do the configuration for the server here
 
 			@@log.debug("... configured!")
-
 		end
 
 
@@ -100,6 +147,7 @@ module RCM
 				}
 				JSON.generate(error_response)
 			end
+
 	end
 
 end

@@ -19,6 +19,16 @@ class RCMServerAppTest < Test::Unit::TestCase
     RCM::RCMServer
   end
 
+  def before_setup
+    super
+    @@log.debug("Running before test")
+    # TODO: I think we can set the environment here to specify the config
+  end
+
+  def after_teardown
+    super
+  end
+
   def test_status
     @@log.debug("Testing status")
     get '/status'
