@@ -4,10 +4,21 @@ require 'json'
 require 'json-schema'
 require 'yaml'
 require 'yamlEnvironmentParser'
+require 'mail'
 
 
 
 module RCM
+
+	module Constants
+		CONFIG_EMAIL = 'email'
+		CONFIG_DELIVERY = 'delivery_method'
+		CONFIG_SMTP_PORT = 'smtp_port'
+		CONFIG_SMTP_SERVER = 'smtp_server'
+		CONFIG_SMTP_USERNAME = 'smtp_username'
+		CONFIG_SMTP_PASSWORD = 'smtp_password'
+	end
+
 
 	class SubmitException < Exception
 	end
@@ -20,8 +31,10 @@ module RCM
 	#
 	class RCMServer < Sinatra::Base
 
+		include RCM::Constants
+
 		RCM_CONFIG_ENV = 'RCM_CONFIG_FILENAME'
-		DEFAULT_CONFIG_FILENAME = 'conf/rcm-server.yaml'
+		DEFAULT_CONFIG_FILENAME = 'conf/rcm-server-dev.yaml'
 
 		MINIMUM_LENGTH = 10
 
@@ -39,8 +52,26 @@ module RCM
 		end
 
 
+		def self.get_email_config(key)
+			value = @@config[CONFIG_EMAIL][key]
+			@@log.debug('Email config, key=%s, value=%s', key, value)
+			value
+		end
+
+
 		def self.configure_email
-			
+			mail_method = get_email_config(CONFIG_DELIVERY)
+
+			options = {
+					address: get_email_config(CONFIG_SMTP_SERVER),
+					port: get_email_config(CONFIG_SMTP_PORT),
+					user_name: get_email_config(CONFIG_SMTP_USERNAME),
+					password: get_email_config(CONFIG_SMTP_PASSWORD)
+			}
+
+			Mail.defaults do
+				delivery_method mail_method, options
+			end
 		end
 
 
@@ -63,6 +94,19 @@ module RCM
 			@@config = YamlEnvironmentParser.parse(File.read(configFilename))
 
 			configure_email
+
+			if settings.development?
+				@@log.debug('** Development **')
+			end
+
+			if settings.test?
+				@@log.debug('** Test **')
+			end
+
+			if settings.production?
+				@@log.debug('** Production **')
+			end
+
 
 			@@log.debug('... loaded')
 

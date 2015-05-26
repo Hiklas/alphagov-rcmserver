@@ -12,7 +12,7 @@ class RCMServerAppMailTest < Test::Unit::TestCase
   include Rack::Test::Methods
 
   RCM_CONFIG_ENV = RCM::RCMServer::RCM_CONFIG_ENV
-  RCM_TEST_CONFIG_FILE = 'test/conf/rcm-server.yaml'
+  RCM_TEST_CONFIG_FILE = 'test/conf/rcm-server-dev.yaml'
 
 
   def app

@@ -4,8 +4,17 @@ GEM
     addressable (2.3.8)
     backports (3.6.4)
     eventmachine (1.0.7)
+    gpgme (2.0.8)
+      mini_portile (>= 0.5.0)
     json-schema (2.5.1)
       addressable (~> 2.3.7)
+    mail (2.6.3)
+      mime-types (>= 1.16, < 3)
+    mail-gpg (0.2.4)
+      gpgme (~> 2.0, >= 2.0.2)
+      mail (~> 2.5, >= 2.5.3)
+    mime-types (2.6.1)
+    mini_portile (0.6.2)
     multi_json (1.11.0)
     rack (1.6.0)
     rack-protection (1.5.3)
@@ -31,6 +40,8 @@ PLATFORMS
 DEPENDENCIES
   eventmachine (>= 1.0.3)
   json-schema
+  mail
+  mail-gpg
   rack (>= 1.5.2)
   rack-test
   sinatra (>= 1.4.5)
