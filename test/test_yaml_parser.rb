@@ -1,10 +1,12 @@
-require 'util/logger'
+require 'util/lumber'
 require 'yamlEnvironmentParser'
 require 'test/unit'
 
 class RCMYamlParserTest < Test::Unit::TestCase
 
-  @@log = Util::LoggerLikeJava.new("RCMYamlParserTest")
+  include Util::Lumber::LumberJack
+
+  @@log = lumber("RCMYamlParserTest")
 
   TEST_EMPTY_ENV = 'SILLY_SILLY_DAFT_NULL'
   TEST_VALID_ENV_NAME = 'SILLY_SILLY_VALID_ENV'
@@ -60,18 +62,19 @@ class RCMYamlParserTest < Test::Unit::TestCase
     YamlEnvironmentParser.new
   end
 
+
   def changeEnv(hashOfEnvValues, *args, &block)
-    @@log.debug("Setting environment: #{hashOfEnvValues}")
+    @@log.debug('Setting environment: %s', hashOfEnvValues)
 
     hashOfEnvValues.each_key do |key|
       value = hashOfEnvValues[key]
-      @@log.debug("Setting #{key} to #{value}")
+      @@log.debug('Setting %s to %s', key, value)
       ENV[key] = value
     end
 
-    @@log.debug("Calling block ...")
+    @@log.debug('Calling block ...')
     block.call(args)
-    @@log.debug("...  resetting environment")
+    @@log.debug('...  resetting environment')
 
     hashOfEnvValues.each_key do |key|
       ENV[key] = nil

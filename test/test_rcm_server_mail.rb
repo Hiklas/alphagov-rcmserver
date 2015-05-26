@@ -1,11 +1,13 @@
-require 'util/logger'
+require 'util/lumber'
 require 'rcmServer'
 require 'test/unit'
 require 'rack/test'
 
 class RCMServerAppMailTest < Test::Unit::TestCase
 
-  @@log = Util::LoggerLikeJava.new("RCMServerAppMailTest")
+  include Util::Lumber::LumberJack
+
+  @@log = lumber("RCMServerAppMailTest")
 
   include Rack::Test::Methods
 

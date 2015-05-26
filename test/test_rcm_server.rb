@@ -1,11 +1,13 @@
-require 'util/logger'
+require 'util/lumber'
 require 'rcmServer'
 require 'test/unit'
 require 'rack/test'
 
 class RCMServerAppTest < Test::Unit::TestCase
 
-  @@log = Util::LoggerLikeJava.new("RCMServerAppTest")
+  include Util::Lumber::LumberJack
+
+  @@log = lumber("RCMServerAppTest")
 
   HTML_DETECTION_RE = /<html>|<div>|<body>|<p>/
 
@@ -30,19 +32,19 @@ class RCMServerAppTest < Test::Unit::TestCase
   end
 
   def test_status
-    @@log.debug("Testing status")
+    @@log.debug('Testing status')
     get '/status'
     assert_equal '{ "status" : "Testing status" }', last_response.body
   end
 
   def test_status_with_params
-    @@log.debug("Testing status with parameters")
+    @@log.debug('Testing status with parameters')
     get '/status', :name => 'Frank'
     assert_equal '{ "status" : "Testing status" }', last_response.body
   end
 
   def test_submit_with_empty
-    @@log.debug("Testing submit data with empty body")
+    @@log.debug('Testing submit data with empty body')
     post '/submitEvidence', '', 'Content Type' => 'application/json'
     lastCode = last_response.status
     assert(lastCode == 400, "We got the wrong return code: #{lastCode}")
@@ -50,26 +52,26 @@ class RCMServerAppTest < Test::Unit::TestCase
 
 
   def test_submit_with_larger_body
-    @@log.debug("Testing submit data with slightly larger body")
+    @@log.debug('Testing submit data with slightly larger body')
     post '/submitEvidence', '              ', 'Content Type' => 'application/json'
     lastCode = last_response.status
     assert(lastCode == 200, "We got the wrong return code: #{lastCode}")
   end
 
   def test_status_no_html
-    @@log.debug("Testing status contains no html")
+    @@log.debug('Testing status contains no html')
     get '/status'
     check_no_html_in_body
   end
 
   def test_incorrect_resource_no_html
-    @@log.debug("Testing a failure doesn't result in a HTML page")
+    @@log.debug('Testing a failure doesn\'t result in a HTML page')
     get '/wibble_blah_blergh'
     check_no_html_in_body
   end
 
   def test_json_returned_incorrect_resource
-    @@log.debug("Testing JSON returned")
+    @@log.debug('Testing JSON returned')
     get '/wibble_blah_blergh'
     check_json_in_body
   end
@@ -109,8 +111,8 @@ class RCMServerAppTest < Test::Unit::TestCase
         found_html |= check_re_in_string(check_regular_expression, body_part.to_str)
       end
     else
-      @@log.error("Could not handle a body of type #{body.class.to_str}")
-      fail("Got a body class we didn't understand")
+      @@log.error('Could not handle a body of type "%s"', body.class.to_str)
+      fail('Got a body class we didn\'t understand')
     end
   end
 
