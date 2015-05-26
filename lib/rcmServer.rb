@@ -3,6 +3,8 @@ require 'util/lumber'
 require 'json'
 require 'json-schema'
 require 'yaml'
+require 'yamlEnvironmentParser'
+
 
 
 module RCM
@@ -37,6 +39,11 @@ module RCM
 		end
 
 
+		def self.configure_email
+			
+		end
+
+
 		def initialize
 			super
 			@@log.debug('RCMServer Instance created')
@@ -53,7 +60,9 @@ module RCM
 
 			@@log.debug('Loading yaml config from "%s" ...', configFilename)
 
-			@@config = YAML::load(File.read(configFilename))
+			@@config = YamlEnvironmentParser.parse(File.read(configFilename))
+
+			configure_email
 
 			@@log.debug('... loaded')
 
