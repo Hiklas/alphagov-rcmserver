@@ -1,7 +1,10 @@
+require 'util/logger'
 require 'psych/handler'
 require 'psych/json/tree_builder'
 
 class YamlEnvironmentParser < Psych::TreeBuilder
+
+  @@log = Util::LoggerLikeJava.new("RCMServer")
 
   REPLACE_REGEXP = /\${[\w]+}/
   ENVIRONMENT_VARIABLE_REGEXP = /\${([\w]+)}/
@@ -17,17 +20,19 @@ class YamlEnvironmentParser < Psych::TreeBuilder
   end
 
   def replace_env_value(value)
-    value.gsub(REPLACE_REGEXP) do |envMatch|
-      env_variable_match = ENVIRONMENT_VARIABLE_REGEXP.match(envMatch)
-      env_variable = env_variable_match[0]
-      (env_variable==nil) ? "No variable found" : get_environment_value(env_variable)
+    result = value.gsub(REPLACE_REGEXP) do |envMatch|
+      @@log.debug("Found a match: #{envMatch}")
+      env_variable_name_match = ENVIRONMENT_VARIABLE_REGEXP.match(envMatch)
+      env_variable_name = env_variable_name_match[1]
+      (env_variable_name==nil) ? 'No variable name found' : get_environment_value(env_variable_name)
     end
-    value
+    result
   end
 
   def get_environment_value(env_variable)
+    @@log.debug("Getting value of: #{env_variable}")
     value_from_environment = ENV[env_variable]
-    (value_from_environment == nil) ? "No environment found for #{env_variable}" : value_from_environment
+    (value_from_environment == nil) ? "(No value found for #{env_variable})" : value_from_environment
   end
 
   def parse(filename)
