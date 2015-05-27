@@ -17,6 +17,7 @@ module RCM
 		CONFIG_SMTP_SERVER = 'smtp_server'
 		CONFIG_SMTP_USERNAME = 'smtp_username'
 		CONFIG_SMTP_PASSWORD = 'smtp_password'
+		CONFIG_EMAIL_DOMAIN = 'domain'
 	end
 
 
@@ -66,11 +67,19 @@ module RCM
 					address: get_email_config(CONFIG_SMTP_SERVER),
 					port: get_email_config(CONFIG_SMTP_PORT),
 					user_name: get_email_config(CONFIG_SMTP_USERNAME),
-					password: get_email_config(CONFIG_SMTP_PASSWORD)
+					password: get_email_config(CONFIG_SMTP_PASSWORD),
+					domain: get_email_config(CONFIG_EMAIL_DOMAIN)
 			}
 
 			Mail.defaults do
 				delivery_method mail_method, options
+			end
+		end
+
+
+		def self.configure_environment
+			ENV.each_key do |key|
+				@@log.debug('Environment, key=%s, value=%s', key, ENV[key])
 			end
 		end
 
@@ -93,6 +102,7 @@ module RCM
 
 			@@config = YamlEnvironmentParser.parse(File.read(configFilename))
 
+			configure_environment
 			configure_email
 
 			if settings.development?
