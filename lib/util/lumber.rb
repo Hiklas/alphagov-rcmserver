@@ -24,7 +24,7 @@ module Util
 
       include Constants
 
-      DEFAULT_OUT = STDOUT
+      DEFAULT_OUT = STDERR
       DEFAULT_LEVEL = DEBUG
 
 
