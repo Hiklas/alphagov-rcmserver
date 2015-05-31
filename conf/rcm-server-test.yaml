@@ -1,8 +1,16 @@
-evidence_schema: conf/evidence_schema.json
+
+evidence:
+  schema: conf/evidence_schema.json
+  minimum: 10
+  maximum: 8000
+  line: 80
+
 email:
-  # This will get converted to a symbol
-  delivery_method: test
-  smtp_server:
-  smtp_port:
-  username:
-  password:
+  server:
+    # This will get converted to a symbol
+    delivery_method: test
+    smtp_server:
+    smtp_port:
+    username:
+    password:
+

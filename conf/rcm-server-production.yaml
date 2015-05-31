@@ -1,0 +1,19 @@
+evidence:
+  schema: conf/evidence_schema.json
+  minimum: 10
+  maximum: 8000
+  line: 80
+
+email:
+  server:
+    delivery_method: smtp
+    smtp_server: ${MAILGUN_SMTP_SERVER}
+    smtp_port: ${MAILGUN_SMTP_PORT}
+    username: ${MAILGUN_SMTP_LOGIN}
+    password: ${MAILGUN_SMTP_PASSWORD}
+    # Hard-coded for now
+    domain: alphagov-rcmserver.heroku.com
+
+  delivery:
+    from: fiona
+    recipient:

@@ -1,7 +1,0 @@
-evidence_schema: conf/evidence_schema.json
-email:
-  delivery_method: smtp
-  smtp_server: ${MAILGUN_SMTP_SERVER}
-  smtp_port: ${MAILGUN_SMTP_PORT}
-  username: ${MAILGUN_SMTP_LOGIN}
-  password: ${MAILGUN_SMTP_PASSWORD}
