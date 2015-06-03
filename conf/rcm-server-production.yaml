@@ -9,10 +9,10 @@ email:
     delivery_method: smtp
     smtp_server: ${MAILGUN_SMTP_SERVER}
     smtp_port: ${MAILGUN_SMTP_PORT}
-    username: ${MAILGUN_SMTP_LOGIN}
-    password: ${MAILGUN_SMTP_PASSWORD}
+    smtp_username: ${MAILGUN_SMTP_LOGIN}
+    smtp_password: ${MAILGUN_SMTP_PASSWORD}
     # Hard-coded for now
-    domain: alphagov-rcmserver.heroku.com
+    domain: alphagov-rcmserver.herokuapp.com
 
   address:
     from: fionahiklasdwp@gmail.com

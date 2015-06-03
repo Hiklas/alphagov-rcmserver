@@ -11,8 +11,8 @@ email:
     delivery_method: test
     smtp_server:
     smtp_port:
-    username:
-    password:
+    smtp_username:
+    smtp_password:
 
   address:
     from: wibble@wibble.wobble
