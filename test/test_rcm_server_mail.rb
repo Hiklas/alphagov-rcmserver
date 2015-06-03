@@ -14,6 +14,10 @@ class RCMServerAppMailTest < Test::Unit::TestCase
 
   SIMPLE_JSON_TO_EMAIL = '{ "name" : "Terry Pratchett", "status" : "Return to Sender" }'
 
+  SIMPLE_FROM = 'wibble@wibble.wobble'
+  SIMPLE_RECIPIENT =  'terrypratchett@discworld.atuin'
+  SIMPLE_SUBJECT = 'The Grim Squeaker'
+
   def app
     @@log.debug("Returning RCMServer class")
     RCM::RCMServer
@@ -53,6 +57,15 @@ class RCMServerAppMailTest < Test::Unit::TestCase
 
     delivery = deliveries.first
 
+    from = delivery.from[0]
+    to = delivery.to[0]
+    subject = delivery.subject
+    body = delivery.body
+
+    assert(from == SIMPLE_FROM, "From is not correct, is #{from}")
+    assert(to == SIMPLE_RECIPIENT, "To is not correct, is #{to}")
+    assert(subject == SIMPLE_SUBJECT, "Subject is not correct, is #{subject}")
+    assert(body == SIMPLE_JSON_TO_EMAIL, "Body is not correct, is #{body}")
 
     # Must do this otherwise it leaves deliveries in the queue and this breaks subsequent tests
     deliveries.clear
