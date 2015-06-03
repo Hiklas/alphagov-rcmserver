@@ -5,10 +5,16 @@ evidence:
   line: 80
 
 email:
-  delivery_method: test
-  smtp_server:
-  smtp_port:
-  username:
-  password:
+  server:
+    # This will get converted to a symbol
+    delivery_method: test
+    smtp_server:
+    smtp_port:
+    username:
+    password:
 
-
+  address:
+    from: fionahiklasdwp@gmail.com
+    recipient: fionahiklasdwp@gmail.com
+    subject: "Evidence submission"
+    

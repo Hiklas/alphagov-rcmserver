@@ -14,3 +14,10 @@ email:
     username:
     password:
 
+  address:
+    from: wibble@wibble.wobble
+    recipient: terrypratchett@discworld.atuin
+    subject: "The Grim Squeaker"
+
+
+

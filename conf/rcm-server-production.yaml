@@ -14,6 +14,7 @@ email:
     # Hard-coded for now
     domain: alphagov-rcmserver.heroku.com
 
-  delivery:
-    from: fiona
-    recipient:
+  address:
+    from: fionahiklasdwp@gmail.com
+    recipient: fionahiklasdwp@gmail.com
+    subject: "Evidence submission"

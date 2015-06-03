@@ -27,6 +27,7 @@ module RCM
 		CONFIG_ADDRESSING = 'address'
 		CONFIG_RECIPIENT = 'recipient'
 		CONFIG_FROM = 'from'
+		CONFIG_SUBJECT = 'subject'
 		CONFIG_PGP_KEY = 'pgp'
 
 		CONFIG_EVIDENCE = 'evidence'
@@ -119,8 +120,8 @@ module RCM
 		end
 
 		def self.email_send_config(key)
-			value = @@config[CONFIG_EMAIL][CONFIG_DELIVERY][key]
-			@@log.debug('Email server config, key=%s, value=%s', key, value)
+			value = @@config[CONFIG_EMAIL][CONFIG_ADDRESSING][key]
+			@@log.debug('Email send config, key=%s, value=%s', key, value)
 			value
 		end
 
@@ -151,6 +152,9 @@ module RCM
 			RCMServer::email_send_config(CONFIG_RECIPIENT)
 		end
 
+		def email_subject
+			RCMServer::email_send_config(CONFIG_SUBJECT)
+		end
 
 
 		def self.configure_email
@@ -232,9 +236,10 @@ module RCM
 			pipeline_data = send_email(pipeline_data.data) if pipeline_data.status
 
 			if pipeline_data.status
-				@@log.debug('')
+				@@log.debug('Success!')
 				pipeline_data.data
 			else
+				@@log.debug('We got an error')
 				pipeline_data.error
 			end
 		end
@@ -266,6 +271,7 @@ module RCM
 				]
 			end
 
+
 			def generate_error_json(code, message)
 				error_response = {
 						'error' => code,
@@ -273,6 +279,15 @@ module RCM
 				}
 				JSON.generate(error_response)
 			end
+
+
+			def generate_success_response(message)
+				[ 200,
+					{ 'Content-Type' => 'application/json'},
+					'{ "message": "Success" }'
+				]
+			end
+
 
 			def read_request_body(body_stringio)
 				@@log.debug('Reading request data')
@@ -319,6 +334,13 @@ module RCM
 
 				# Response object
 				response = ProcessDataReturnObject.new
+
+				# TODO: Currently this is just text data, it needs validating and parsing into JSON
+				response.data = json_data
+				response.status = true
+
+				# Remember to have response on it's own as the last statement so this is the return object
+				response
 			end
 
 
@@ -327,6 +349,23 @@ module RCM
 
 				# Response object
 				response = ProcessDataReturnObject.new
+
+				from_value = email_from
+				recipient_value = email_recipient
+				subject_value = email_subject
+
+				mail = Mail.new do
+					from     from_value
+					to       recipient_value
+					subject  subject_value
+					body     parsed_data
+				end
+
+				response.data = mail
+				response.status = true
+
+				# Remember to have response on it's own as the last statement so this is the return object
+				response
 			end
 
 
@@ -335,6 +374,16 @@ module RCM
 
 				# Response object
 				response = ProcessDataReturnObject.new
+
+				@@log.debug('About to send the email')
+				email_data.deliver!
+				@@log.debug('Email sent')
+
+				response.data = generate_success_response('Email sent')
+				response.status = true
+
+				# Remember to have response on it's own as the last statement so this is the return object
+				response
 			end
 
 	end
