@@ -15,6 +15,6 @@ email:
     domain: alphagov-rcmserver.herokuapp.com
 
   address:
-    from: fionahiklasdwp@gmail.com
-    recipient: fionahiklasdwp@gmail.com
-    subject: "Evidence submission"
+    from: ${EMAIL_SENDER}
+    recipient: ${EMAIL_RECIPIENT}
+    subject: ${EMAIL_SUBJECT}
