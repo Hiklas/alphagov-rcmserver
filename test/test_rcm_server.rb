@@ -17,8 +17,8 @@ class RCMServerAppTest < Test::Unit::TestCase
   include Rack::Test::Methods
 
   def app
-    @@log.debug("Returning RCMServer class")
-    RCM::RCMServer
+    @@log.debug("Returning RCMServer instance")
+    RCM::RCMServer.new
   end
 
   def before_setup

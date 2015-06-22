@@ -18,3 +18,4 @@ email:
     from: ${EMAIL_SENDER}
     recipient: ${EMAIL_RECIPIENT}
     subject: ${EMAIL_SUBJECT}
+    disabled: ${EMAIL_DISABLED}

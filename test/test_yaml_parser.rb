@@ -1,12 +1,16 @@
 require 'util/lumber'
 require 'yamlEnvironmentParser'
 require 'test/unit'
+require 'test_utils'
 
 class RCMYamlParserTest < Test::Unit::TestCase
 
   include Util::Lumber::LumberJack
 
   @@log = lumber("RCMYamlParserTest")
+
+  # This includes the changeEnv method for testing with different environment variable settings
+  include TestUtils
 
   TEST_EMPTY_ENV = 'SILLY_SILLY_DAFT_NULL'
   TEST_VALID_ENV_NAME = 'SILLY_SILLY_VALID_ENV'
@@ -104,24 +108,5 @@ class RCMYamlParserTest < Test::Unit::TestCase
     YamlEnvironmentParser.new
   end
 
-
-  def changeEnv(hashOfEnvValues, *args, &block)
-    @@log.debug('Setting environment: %s', hashOfEnvValues)
-
-    hashOfEnvValues.each_key do |key|
-      value = hashOfEnvValues[key]
-      @@log.debug('Setting %s to %s', key, value)
-      ENV[key] = value
-    end
-
-    @@log.debug('Calling block ...')
-    block.call(args)
-    @@log.debug('...  resetting environment')
-
-    hashOfEnvValues.each_key do |key|
-      ENV[key] = nil
-    end
-
-  end
 end
 

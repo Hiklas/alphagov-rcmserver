@@ -29,11 +29,14 @@ module RCM
 		CONFIG_FROM = 'from'
 		CONFIG_SUBJECT = 'subject'
 		CONFIG_PGP_KEY = 'pgp'
+		CONFIG_DISABLED = 'disabled'
 
 		CONFIG_EVIDENCE = 'evidence'
 		CONFIG_MINIMUM_LENGTH = 'minimum'
 		CONFIG_MAXIMUM_LENGTH = 'maximum'
 		CONFIG_LINE_LENGTH = 'line'
+
+		ENV_EMAIL_DISABLED = 'EMAIL_DISABLED'
 	end
 
 
@@ -131,6 +134,10 @@ module RCM
 			value
 		end
 
+		def self.environment_config(key)
+			ENV[key]
+		end
+
 		def minimum_length
 			RCMServer::evidence_config(CONFIG_MINIMUM_LENGTH) || DEFAULT_MINIMUM_LENGTH
 		end
@@ -156,6 +163,16 @@ module RCM
 			RCMServer::email_send_config(CONFIG_SUBJECT)
 		end
 
+		def email_disabled
+			# TODO: Bit of a hack here.  Under normal circumstances the status of the email_disabled setting
+			# TODO: would just be read from the yaml file.  For testing however, the same Ruby VM is used for all
+			# TODO: tests so that once the rcmServer has been created (and the yaml config read) things don't change.
+			# TODO: This means that the tests for disabling email won't work as they need to set the environment for
+			# TODO: just this run.  For now, we're using this hack (force the environment to be re-read).  Ideally
+			# TODO: this test should be run in a new VM, OR we have another mechnanism for configuring the application
+			# TODO: that allows runtime changes.
+			RCMServer::environment_config(ENV_EMAIL_DISABLED) || RCMServer::email_send_config(CONFIG_DISABLED)
+		end
 
 		def self.configure_email
 			mail_method_text = email_server_config(CONFIG_DELIVERY)
@@ -299,6 +316,7 @@ module RCM
 				posted_data = ''
 
 				begin
+					# TODO: What delimits a line
 					body_stringio.each_line(line_length) do |line|
 						posted_data += line
 						if posted_data.length > maximum_length
@@ -375,11 +393,20 @@ module RCM
 				# Response object
 				response = ProcessDataReturnObject.new
 
-				@@log.debug('About to send the email')
-				email_data.deliver!
-				@@log.debug('Email sent')
+				disabled = email_disabled
 
-				response.data = generate_success_response('Email sent')
+				@@log.debug('Email disabled: %s', disabled)
+
+				if disabled == 'true'
+					@@log.info('*** Skipping sending of email ***')
+					response.data = generate_success_response('Email skipped')
+				else
+					@@log.debug('About to send the email')
+					email_data.deliver!
+					response.data = generate_success_response('Email sent')
+					@@log.debug('Email sent')
+				end
+
 				response.status = true
 
 				# Remember to have response on it's own as the last statement so this is the return object

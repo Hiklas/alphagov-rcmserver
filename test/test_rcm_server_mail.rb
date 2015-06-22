@@ -3,6 +3,8 @@ require 'rcmServer'
 require 'test/unit'
 require 'rack/test'
 require 'mail'
+require 'test_utils'
+
 
 class RCMServerAppMailTest < Test::Unit::TestCase
 
@@ -13,14 +15,21 @@ class RCMServerAppMailTest < Test::Unit::TestCase
   include Rack::Test::Methods
 
   SIMPLE_JSON_TO_EMAIL = '{ "name" : "Terry Pratchett", "status" : "Return to Sender" }'
-
   SIMPLE_FROM = 'wibble@wibble.wobble'
   SIMPLE_RECIPIENT =  'terrypratchett@discworld.atuin'
   SIMPLE_SUBJECT = 'The Grim Squeaker'
 
+
+
   def app
-    @@log.debug("Returning RCMServer class")
-    RCM::RCMServer
+    @@log.debug("Returning RCMServer instance")
+    RCM::RCMServer.new
+  end
+
+
+  def setup
+    # Make sure the test mailer is clear and has no outstanding messages
+    Mail::TestMailer.deliveries.clear
   end
 
 
@@ -36,10 +45,7 @@ class RCMServerAppMailTest < Test::Unit::TestCase
 
     numberDeliveries = deliveries.length
     assert(numberDeliveries == 1, "Didn't get 1 delivery, got #{numberDeliveries}")
-
-    # Must do this otherwise it leaves deliveries in the queue and this breaks subsequent tests
-    deliveries.clear
-  end
+end
 
 
   def test_submit_with_simple_json_check_contents
@@ -66,9 +72,6 @@ class RCMServerAppMailTest < Test::Unit::TestCase
     assert(to == SIMPLE_RECIPIENT, "To is not correct, is #{to}")
     assert(subject == SIMPLE_SUBJECT, "Subject is not correct, is #{subject}")
     assert(body == SIMPLE_JSON_TO_EMAIL, "Body is not correct, is #{body}")
-
-    # Must do this otherwise it leaves deliveries in the queue and this breaks subsequent tests
-    deliveries.clear
   end
 
 end

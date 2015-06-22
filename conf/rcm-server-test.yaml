@@ -18,6 +18,7 @@ email:
     from: wibble@wibble.wobble
     recipient: terrypratchett@discworld.atuin
     subject: "The Grim Squeaker"
+    disabled: ${EMAIL_DISABLED}
 
 
 
