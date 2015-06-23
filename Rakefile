@@ -8,3 +8,11 @@ Rake::TestTask.new(:test) do |t|
   t.warning = true
 end
 
+
+Rake::TestTask.new(:test_mustache) do |t|
+  ENV['RACK_ENV'] = 'test'
+  t.libs << "test"
+  t.libs << "lib"
+  t.pattern = 'test/**/test_mustache_*.rb'
+  t.warning = true
+end

@@ -95,3 +95,76 @@ The address that emailed data will be sent to.
 NOTE: Make absolutely sure that you enter this correctly and seek (and obtain) permission from the person whom you will be sending this data to.
 
 
+## Data
+
+### JSON Format
+
+The server presents a REST API that expects data to be sent in JSON format
+
+
+#### Example
+
+The example below shows data that the client would send to the server
+
+```
+{
+  "caller": "RCM",
+  "timestamp": "Thu Jun 11 2015 16:32:28 GMT+0100 (BST)",
+  "values": {
+    "form__identify-suspect": {
+      "first-name": "Joe",
+      "last-name": "Bloggs",
+      "alternative-name--data": {
+        "alternative-name--first-name": "",
+        "alternative-name--last-name": ""
+      },
+      "helper--alternative-name": "No",
+      "dob--data": {
+        "dob--day": "",
+        "dob--month": "",
+        "dob--year": "",
+        "dob--approx": "35"
+      },
+      "helper--dob": "No",
+      "helper--address": "Yes",
+      "address--data": {
+        "address--line-1": "1",
+        "address--line-2": "Terrace street",
+        "address--town": "Hull",
+        "address--county": "",
+        "address--postcode": "HU11 1DS"
+      },
+      "nino--data": {
+        "nino--ni-number": ""
+      },
+      "helper--nino": "No",
+      "helper--telephone": "Yes",
+      "telephone--data": {
+        "telephone--mobile": "07780807070",
+        "telephone--home": "",
+        "telephone--other": ""
+      },
+      "helper--email": "Yes",
+      "email--data": {
+        "email--email": "joe@bloggs.com"
+      },
+      "social-media--info": "facebook"
+    },
+    "form__fraud-type": {
+      "fraud-type": "workEarning"
+    },
+    "form__employment-suspect": {
+      "work-location": "At home",
+      "helper--self-employed": "Yes",
+      "self-employed--data": {
+        "self-employed--type-of-work": "He makes beer"
+      },
+      "work-duration": "years",
+      "timings": "N\/A (he works from home)"
+    },
+    "form__other-information": {
+      "additional-information": "He makes very nice beer that I buy while he's on benefit"
+    }
+  }
+}
+```
