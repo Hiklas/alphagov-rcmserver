@@ -1,0 +1,51 @@
+TimeStamp: {{timestamp}}
+{{#values}}
+{{#form__fraud-type}}
+Fraud type: {{fraud-type}}
+{{/form__fraud-type}}
+{{#form__identify-suspect}}
+First name: {{first-name}}
+Last name: {{last-name}}
+Alternative name present: {{helper--alternative-name}}
+{{#alternative-name--data}}
+Alias first name: {{alternative-name--first-name}}
+Alias last name: {{alternative-name--last-name}}
+{{/alternative-name--data}}
+Date of birth present: {{helper--dob}}
+{{#dob--data}}
+Date of birth: {{dob--day}}/{{dob--month}}/{{dob--year}}
+Age: {{dob--approx}}
+{{/dob--data}}
+Address present: {{helper--address}}
+{{#address--data}}
+Address: {{address--line-1}} {{address--line-2}} {{address--town}} {{address--county}} {{address--postcode}}
+{{/address--data}}
+NINO Present: {{helper--nino}}
+{{#nino--data}}
+NINO: {{nino--ni-number}}
+{{/nino--data}}
+Telephone present: {{helper--telephone}}
+{{#telephone--data}}
+Mobile: {{telephone--mobile}}
+Home: {{telephone--home}}
+Other: {{telephone--other}}
+{{/telephone--data}}
+E-mail present: {{helper--email}}
+{{#email--data}}
+Email: {{email--email}}
+{{/email--data}}
+Social media: {{social-media--info}}
+{{/form__identify-suspect}}
+{{#form__employment-suspect}}
+Work location: {{work-location}}
+Self employed present: {{helper--self-employed}}
+{{#self-employed--data}}
+Type of work: {{self-employed--type-of-work}}
+{{/self-employed--data}}
+Work duration: {{work-duration}}
+Timings: {{timings}}
+{{/form__employment-suspect}}
+{{#form__other-information}}
+Additional information: {{additional-information}}
+{{/form__other-information}}
+{{/values}}
