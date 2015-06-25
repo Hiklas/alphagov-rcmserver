@@ -16,11 +16,17 @@ class RCMMustacheTemplateTest < Test::Unit::TestCase
 
   JSON_FILE = 'test/client.post.test.json'
   FULL_TEMPLATE_FILE = 'conf/email-template.mustache'
+
   SIMPLE_DOT_TEMPLATE = 'test/dot-notation.mustache'
   DEEP_DOT_TEMPLATE = 'test/dot-notation-deep.mustache'
+  VISIBLE_SECTION_TEMPLATE = 'test/visible-section.mustache'
+  MISSING_SECTION_TEMPLATE = 'test/missing-section.mustache'
 
   SIMPLE_DOT_RESULT = "Hello Terry Pratchett!\nHow are you today?"
   DEEP_DOT_RESULT = "Hello Terry Pratchett!\nHow are you today string?"
+  VISIBLE_SECTION_RESULT = "TimeStamp: Thu Jun 11 2015 16:32:28 GMT+0100 (BST)\nFirst name: Joe\nLast name: Bloggs\nAlias first name: Carrot\nAlias last name: Ironfoundersson\n"
+  MISSING_SECTION_RESULT = "TimeStamp: Thu Jun 11 2015 16:32:28 GMT+0100 (BST)\nFirst name: Joe\nLast name: Bloggs\n"
+
 
   def self.read_json
     @@log.debug('Reading file ...')
@@ -93,6 +99,44 @@ class RCMMustacheTemplateTest < Test::Unit::TestCase
     @@log.debug('Got output from template: "%s" expected: "%s"', output, DEEP_DOT_RESULT)
 
     assert(output == DEEP_DOT_RESULT, 'Didn\'t get correct result')
+  end
+
+
+  def test_nested_sections_present_in_data
+    mustache = Mustache.new
+    mustache.template_file = VISIBLE_SECTION_TEMPLATE
+
+    assert(mustache.template_file == VISIBLE_SECTION_TEMPLATE, 'Template file wasn\'t set to the correct value')
+
+    data_hash = @@json_data
+
+    mustache[:timestamp] = data_hash['timestamp']
+    mustache[:values] = data_hash['values']
+
+    output = mustache.render
+
+    assert(output != nil, 'Didn\'t get any output')
+    @@log.debug('Got output from template: "%s", expected: "%s"', output, VISIBLE_SECTION_RESULT)
+    assert(output == VISIBLE_SECTION_RESULT, "Didn't get expected output")
+  end
+
+
+  def test_nested_sections_missing_in_data
+    mustache = Mustache.new
+    mustache.template_file = MISSING_SECTION_TEMPLATE
+
+    assert(mustache.template_file == MISSING_SECTION_TEMPLATE, 'Template file wasn\'t set to the correct value')
+
+    data_hash = @@json_data
+
+    mustache[:timestamp] = data_hash['timestamp']
+    mustache[:values] = data_hash['values']
+
+    output = mustache.render
+
+    assert(output != nil, 'Didn\'t get any output')
+    @@log.debug('Got output from template: "%s", expected: "%s"', output, MISSING_SECTION_RESULT)
+    assert(output == MISSING_SECTION_RESULT, "Didn't get expected output")
   end
 
 end

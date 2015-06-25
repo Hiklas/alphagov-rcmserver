@@ -6,8 +6,8 @@
       "first-name": "Joe",
       "last-name": "Bloggs",
       "alternative-name--data": {
-        "alternative-name--first-name": "",
-        "alternative-name--last-name": ""
+        "alternative-name--first-name": "Carrot",
+        "alternative-name--last-name": "Ironfoundersson"
       },
       "helper--alternative-name": "No",
       "dob--data": {
