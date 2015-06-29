@@ -127,7 +127,7 @@ module Util
         thread_id = get_thread_id
         log_message = sprintf(message, *args)
 
-        sprintf("[%s]-[%d]-[%s] - %s", timestamp, thread_id, level_string, log_message)
+        sprintf("[%s]-[%d]-[%s] - [%s] %s", timestamp, thread_id, level_string, @name, log_message)
       end
 
       def get_current_timestamp

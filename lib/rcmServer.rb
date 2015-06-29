@@ -356,7 +356,7 @@ module RCM
 					end
 
 					if posted_data.length < minimum_length
-						@@log.debug('Read request data: below minimum length')
+						@@log.debug('Read request data: below minimum length: "%s"', posted_data)
 						raise SubmitException.new(
 											generate_error_response(400, 'Not enough data provided'))
 					end

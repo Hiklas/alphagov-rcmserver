@@ -23,8 +23,17 @@ class RCMServerAppMailTest < Test::Unit::TestCase
 
   def self.read_json
     @@log.debug('Reading file ...')
-    @@json_text = File.read(JSON_FILE)
+    result = File.read(JSON_FILE)
     @@log.debug('... Read file')
+
+    result
+  end
+
+
+  def full_json
+    result = @@json_text ||= RCMServerAppMailTest::read_json
+    @@log.debug('Returning full JSON: %s', result)
+    result
   end
 
 
@@ -100,6 +109,29 @@ class RCMServerAppMailTest < Test::Unit::TestCase
     body = delivery.body.to_s
 
     assert(body.index('{').nil?, "Body contains JSON #{body}")
+  end
+
+
+  def test_submit_with_full_json
+    @@log.debug("Testing submit data with full JSON, checking body contains correct data")
+    post '/submitEvidence', full_json, 'Content Type' => 'application/json'
+    lastCode = last_response.status
+
+    assert(lastCode == 200, "We got the wrong return code: #{lastCode}")
+
+    deliveries = Mail::TestMailer.deliveries
+    assert(deliveries!=nil, "Got nil deliveries")
+
+    numberDeliveries = deliveries.length
+    assert(numberDeliveries == 1, "Didn't get 1 delivery, got #{numberDeliveries}")
+
+    delivery = deliveries.first
+
+    body = delivery.body.to_s
+
+    assert(body.index('{').nil?, "Body contains JSON #{body}")
+    assert(body.index('TimeStamp') != nil, "Body doesn't contain TimeStamp: '#{body}'")
+    assert(body.index('Carrot') != nil, "Body doesn't contain TimeStamp: '#{body}'")
   end
 
 end
