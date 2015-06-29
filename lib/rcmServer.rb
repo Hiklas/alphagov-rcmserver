@@ -345,8 +345,7 @@ module RCM
 				posted_data = ''
 
 				begin
-					# TODO: What delimits a line
-					body_stringio.each_line(line_length) do |line|
+					while line = body_stringio.read(line_length) do 
 						posted_data += line
 						if posted_data.length > maximum_length
 							@@log.debug('Read request data: above maximum length')
