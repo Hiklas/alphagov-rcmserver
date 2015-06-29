@@ -19,3 +19,6 @@ email:
     recipient: ${EMAIL_RECIPIENT}
     subject: ${EMAIL_SUBJECT}
     disabled: ${EMAIL_DISABLED}
+
+  format:
+    template: conf/email-template-plain.mustache

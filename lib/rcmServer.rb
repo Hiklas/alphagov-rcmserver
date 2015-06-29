@@ -5,6 +5,7 @@ require 'json-schema'
 require 'yaml'
 require 'yamlEnvironmentParser'
 require 'mail'
+require 'mustache'
 
 
 ##
@@ -30,6 +31,9 @@ module RCM
 		CONFIG_SUBJECT = 'subject'
 		CONFIG_PGP_KEY = 'pgp'
 		CONFIG_DISABLED = 'disabled'
+
+		CONFIG_FORMAT = 'format'
+		CONFIG_TEMPLATE = 'template'
 
 		CONFIG_EVIDENCE = 'evidence'
 		CONFIG_MINIMUM_LENGTH = 'minimum'
@@ -61,10 +65,15 @@ module RCM
 	# to report an error.
 	#
 	# TODO: This is probably over-engineering and more for aesthetics than actual
-	# TODO: function but I didn't want to have a bunch of if then else clauses
+	# TODO: function but I didn't want to have a bunch of if then else clauses so
+	# TODO: this class is meant to convey the results of previous processing
 	#
 	class ProcessDataReturnObject
 		attr_accessor :status, :error, :data
+
+		# Note: not bothering with initializing status to false as 'nil' counts
+		# as false also.  There is the added advantage that nil can signify the fact
+		# that there was no handling of errors done by a step
 	end
 
 
@@ -128,6 +137,12 @@ module RCM
 			value
 		end
 
+		def self.email_format_config(key)
+			value = @@config[CONFIG_EMAIL][CONFIG_FORMAT][key]
+			@@log.debug('Email format config, key=%s, value=%s', key, value)
+			value
+		end
+
 		def self.evidence_config(key)
 			value = @@config[CONFIG_EMAIL][key]
 			@@log.debug('Email config, key=%s, value=%s', key, value)
@@ -173,6 +188,18 @@ module RCM
 			# TODO: that allows runtime changes.
 			RCMServer::environment_config(ENV_EMAIL_DISABLED) || RCMServer::email_send_config(CONFIG_DISABLED)
 		end
+
+		def email_template
+			@@template
+		end
+
+
+		def self.configure_format
+			template_filename = email_format_config(CONFIG_TEMPLATE)
+			@@log.debug('Reading template file: %s', template_filename)
+			@@template = File.read(template_filename)
+		end
+
 
 		def self.configure_email
 			mail_method_text = email_server_config(CONFIG_DELIVERY)
@@ -239,6 +266,7 @@ module RCM
 			# Do the configuration for the server here
 			configure_environment
 			configure_email
+			configure_format
 
 			@@log.debug('... configured!')
 		end
@@ -249,6 +277,7 @@ module RCM
 
 			pipeline_data = read_request_body(request.body)
 			pipeline_data = validate_json(pipeline_data.data) if pipeline_data.status
+			pipeline_data = generate_form(pipeline_data.data) if pipeline_data.status
 			pipeline_data = create_email(pipeline_data.data) if pipeline_data.status
 			pipeline_data = send_email(pipeline_data.data) if pipeline_data.status
 
@@ -347,15 +376,43 @@ module RCM
 			end
 
 
-			def validate_json(json_data)
+			def validate_json(json_text)
 				@@log.debug('Validating JSON')
 
 				# Response object
 				response = ProcessDataReturnObject.new
 
-				# TODO: Currently this is just text data, it needs validating and parsing into JSON
-				response.data = json_data
-				response.status = true
+				begin
+					response.data = JSON.parse(json_text)
+					response.status = true
+				rescue Exception => ee
+					@@log.debug('Couldn\'t parse JSON %s', json_text)
+					response.error = generate_error_response(500, ee.to_s)
+				end
+
+				# Remember to have response on it's own as the last statement so this is the return object
+				response
+			end
+
+
+			def generate_form(json_hash)
+				# Response object
+				response = ProcessDataReturnObject.new
+
+				begin
+					mustache = Mustache.new
+					mustache.template = email_template
+
+					json_hash.each_key do |key|
+						mustache[key.to_sym] = json_hash[key]
+					end
+
+					response.data = mustache.render
+					response.status = true
+
+				rescue Exception => ee
+					@@log.error('Couldn\'t process template, exception: ', ee)
+				end
 
 				# Remember to have response on it's own as the last statement so this is the return object
 				response

@@ -14,11 +14,18 @@ class RCMServerAppMailTest < Test::Unit::TestCase
 
   include Rack::Test::Methods
 
+  JSON_FILE = 'test/client.post.test.json'
   SIMPLE_JSON_TO_EMAIL = '{ "name" : "Terry Pratchett", "status" : "Return to Sender" }'
+  SIMPLE_JSON_TO_EMAIL_RESULT = "TimeStamp: \n"
   SIMPLE_FROM = 'wibble@wibble.wobble'
   SIMPLE_RECIPIENT =  'terrypratchett@discworld.atuin'
   SIMPLE_SUBJECT = 'The Grim Squeaker'
 
+  def self.read_json
+    @@log.debug('Reading file ...')
+    @@json_text = File.read(JSON_FILE)
+    @@log.debug('... Read file')
+  end
 
 
   def app
@@ -45,7 +52,7 @@ class RCMServerAppMailTest < Test::Unit::TestCase
 
     numberDeliveries = deliveries.length
     assert(numberDeliveries == 1, "Didn't get 1 delivery, got #{numberDeliveries}")
-end
+  end
 
 
   def test_submit_with_simple_json_check_contents
@@ -71,7 +78,28 @@ end
     assert(from == SIMPLE_FROM, "From is not correct, is #{from}")
     assert(to == SIMPLE_RECIPIENT, "To is not correct, is #{to}")
     assert(subject == SIMPLE_SUBJECT, "Subject is not correct, is #{subject}")
-    assert(body == SIMPLE_JSON_TO_EMAIL, "Body is not correct, is #{body}")
+    assert(body == SIMPLE_JSON_TO_EMAIL_RESULT, "Body is not correct, is '#{body}' expected '#{SIMPLE_JSON_TO_EMAIL_RESULT}'")
+  end
+
+
+  def test_submit_with_simple_json_body_not_json
+    @@log.debug("Testing submit data with simple JSON, checking body isn't JSON")
+    post '/submitEvidence', SIMPLE_JSON_TO_EMAIL, 'Content Type' => 'application/json'
+    lastCode = last_response.status
+
+    assert(lastCode == 200, "We got the wrong return code: #{lastCode}")
+
+    deliveries = Mail::TestMailer.deliveries
+    assert(deliveries!=nil, "Got nil deliveries")
+
+    numberDeliveries = deliveries.length
+    assert(numberDeliveries == 1, "Didn't get 1 delivery, got #{numberDeliveries}")
+
+    delivery = deliveries.first
+
+    body = delivery.body.to_s
+
+    assert(body.index('{').nil?, "Body contains JSON #{body}")
   end
 
 end

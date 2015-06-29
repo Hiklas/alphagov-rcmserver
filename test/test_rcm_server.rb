@@ -53,7 +53,7 @@ class RCMServerAppTest < Test::Unit::TestCase
 
   def test_submit_with_larger_body
     @@log.debug('Testing submit data with slightly larger body')
-    post '/submitEvidence', '              ', 'Content Type' => 'application/json'
+    post '/submitEvidence', '{              }', 'Content Type' => 'application/json'
     lastCode = last_response.status
     assert(lastCode == 200, "We got the wrong return code: #{lastCode}")
   end

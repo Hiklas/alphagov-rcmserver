@@ -20,5 +20,8 @@ email:
     subject: "The Grim Squeaker"
     disabled: ${EMAIL_DISABLED}
 
+  format:
+    template: conf/email-template-plain.mustache
+
 
 
