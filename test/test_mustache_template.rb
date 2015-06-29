@@ -26,8 +26,9 @@ class RCMMustacheTemplateTest < Test::Unit::TestCase
   DEEP_DOT_RESULT = "Hello Terry Pratchett!\nHow are you today string?"
   VISIBLE_SECTION_RESULT = "TimeStamp: Thu Jun 11 2015 16:32:28 GMT+0100 (BST)\nFirst name: Joe\nLast name: Bloggs\nAlias first name: Carrot\nAlias last name: Ironfoundersson\n"
   MISSING_SECTION_RESULT = "TimeStamp: Thu Jun 11 2015 16:32:28 GMT+0100 (BST)\nFirst name: Joe\nLast name: Bloggs\n"
-  FULL_RESULT = "TimeStamp: Thu Jun 11 2015 16:32:28 GMT+0100 (BST)\nFraud type: workEarning\nFirst name: Joe\nLast name: Bloggs\nAlternative name present: No\nAlias first name: Carrot\nAlias last name: Ironfoundersson\nDate of birth present: No\nDate of birth: //\nAge: 35\nAddress present: Yes\nAddress: 1 Terrace street Hull  HU11 1DS\nNINO Present: No\nNINO: \nTelephone present: Yes\nMobile: 07780807070\nHome: \nOther: \nE-mail present: Yes\nEmail: joe@bloggs.com\nSocial media: facebook\nWork location: At home\nSelf employed present: Yes\nType of work: He makes beer\nWork duration: years\nTimings: N/A (he works from home)\nAdditional information: He makes very nice beer that I buy while he&#39;s on benefit\n"
+  FULL_RESULT = "TimeStamp: Thu Jun 11 2015 16:32:28 GMT+0100 (BST)\nFraud type: workEarning\nFirst name: Joe\nLast name: Bloggs\nAlternative name present: No\nAlias first name: Carrot\nAlias last name: Ironfoundersson\nDate of birth present: No\nDate of birth: //\nAge: 35\nAddress present: Yes\nAddress: 1 Terrace street Hull  HU11 1DS\nNINO Present: No\nNINO: \nTelephone present: Yes\nMobile: 07780807070\nHome: \nOther: \nE-mail present: Yes\nEmail: joe@bloggs.com\nSocial media: facebook\nWork location: At home\nSelf employed present: Yes\nType of work: He makes beer\nWork duration: years\nTimings: N/A (he works from home)\nAdditional information: He makes very nice beer that I buy while he's on benefit\n"
 
+  CHECK_FOR_ENTITIES = /\&.+;/
 
 
   def self.read_json
@@ -160,6 +161,27 @@ class RCMMustacheTemplateTest < Test::Unit::TestCase
 
     assert(output == FULL_RESULT, "Didn't get expected output")
   end
+
+
+  def test_full_template_check_entities
+    mustache = Mustache.new
+    mustache.template_file = FULL_TEMPLATE_FILE
+
+    assert(mustache.template_file == FULL_TEMPLATE_FILE, 'Template file wasn\'t set to the correct value')
+
+    data_hash = @@json_data
+
+    mustache[:timestamp] = data_hash['timestamp']
+    mustache[:values] = data_hash['values']
+
+    output = mustache.render
+    matchedEntities = CHECK_FOR_ENTITIES.match(output)
+
+    @@log.debug('Check for matches: %s', matchedEntities)
+    assert(matchedEntities == nil, "Body contains '#{matchedEntities}' entities: '#{output}'")
+  end
+
+
 
 end
 

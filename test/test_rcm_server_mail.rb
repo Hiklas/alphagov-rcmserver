@@ -20,6 +20,7 @@ class RCMServerAppMailTest < Test::Unit::TestCase
   SIMPLE_FROM = 'wibble@wibble.wobble'
   SIMPLE_RECIPIENT =  'terrypratchett@discworld.atuin'
   SIMPLE_SUBJECT = 'The Grim Squeaker'
+  CHECK_FOR_ENTITIES = /\&.+;/
 
   def self.read_json
     @@log.debug('Reading file ...')
@@ -132,6 +133,29 @@ class RCMServerAppMailTest < Test::Unit::TestCase
     assert(body.index('{').nil?, "Body contains JSON #{body}")
     assert(body.index('TimeStamp') != nil, "Body doesn't contain TimeStamp: '#{body}'")
     assert(body.index('Carrot') != nil, "Body doesn't contain TimeStamp: '#{body}'")
+  end
+
+
+  def test_submit_with_full_json_check_entities
+    @@log.debug("Testing submit data with full JSON, checking body contains no entities")
+    post '/submitEvidence', full_json, 'Content Type' => 'application/json'
+    lastCode = last_response.status
+
+    assert(lastCode == 200, "We got the wrong return code: #{lastCode}")
+
+    deliveries = Mail::TestMailer.deliveries
+    assert(deliveries!=nil, "Got nil deliveries")
+
+    numberDeliveries = deliveries.length
+    assert(numberDeliveries == 1, "Didn't get 1 delivery, got #{numberDeliveries}")
+
+    delivery = deliveries.first
+
+    body = delivery.body.to_s
+    matchedEntities = CHECK_FOR_ENTITIES.match(body)
+
+    @@log.debug('Check for matches: %s', matchedEntities)
+    assert(matchedEntities == nil, "Body contains entities: '#{body}'")
   end
 
 end

@@ -345,7 +345,7 @@ module RCM
 				posted_data = ''
 
 				begin
-					while line = body_stringio.read(line_length) do 
+					while line = body_stringio.read(line_length) do
 						posted_data += line
 						if posted_data.length > maximum_length
 							@@log.debug('Read request data: above maximum length')
