@@ -6,7 +6,7 @@ class YamlEnvironmentParser < Psych::TreeBuilder
 
   include Util::Lumber::LumberJack
 
-  @@log = lumber("RCMServer")
+  @@log = lumber("YamlEnvironmentParser")
 
   REPLACE_REGEXP = /\${[\w]+}/
   ENVIRONMENT_VARIABLE_REGEXP = /\${([\w]+)}/
