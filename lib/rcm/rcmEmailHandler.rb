@@ -1,9 +1,9 @@
-require 'util/lumber'
-require 'rcmConfig'
 require 'mail'
 require 'mustache'
 
-require 'responseGenerator'
+require 'util/lumber'
+require 'rcm/rcmConfig'
+require 'rcm/responseGenerator'
 
 
 module RCM

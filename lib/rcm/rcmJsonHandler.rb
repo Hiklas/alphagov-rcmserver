@@ -2,11 +2,11 @@ require 'json'
 require 'json-schema'
 
 require 'util/lumber'
-require 'rcmConfig'
+require 'rcm/rcmConfig'
 
-require 'processDataReturnObject'
-require 'submitException'
-require 'responseGenerator'
+require 'rcm/processDataReturnObject'
+require 'rcm/submitException'
+require 'rcm/responseGenerator'
 
 
 module RCM

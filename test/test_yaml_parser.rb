@@ -1,7 +1,9 @@
-require 'util/lumber'
-require 'yamlEnvironmentParser'
 require 'test/unit'
 require 'test_utils'
+
+require 'util/lumber'
+require 'util/yamlEnvironmentParser'
+
 
 class RCMYamlParserTest < Test::Unit::TestCase
 
@@ -67,7 +69,7 @@ class RCMYamlParserTest < Test::Unit::TestCase
 
   def test_parsing_simple_yaml
     changeEnv({ TEST_VALID_ENV_NAME => TEST_VALID_ENV_VALUE }) do
-      result = YamlEnvironmentParser.parse(TEST_YAML_SIMPLE_STRING)
+      result = Util::YamlEnvironmentParser.parse(TEST_YAML_SIMPLE_STRING)
       @@log.debug('Parsed simple yaml and got this: %s', result)
       @@log.debug('Parsed simple yaml and got this object: %s', result['object'])
       @@log.debug('Parsed simple yaml and got this another: %s', result['another'])
@@ -82,7 +84,7 @@ class RCMYamlParserTest < Test::Unit::TestCase
 
   def test_parsing_replace_yaml
     changeEnv({ TEST_VALID_ENV_NAME => TEST_VALID_ENV_VALUE }) do
-      result = YamlEnvironmentParser.parse(TEST_YAML_REPLACE_STRING)
+      result = Util::YamlEnvironmentParser.parse(TEST_YAML_REPLACE_STRING)
       fred = result['object']['obj1']
       sheila = result['another']['obj1']
       assert(fred == TEST_VALID_ENV_VALUE, "Didn't get valid value, got #{fred}")
@@ -93,7 +95,7 @@ class RCMYamlParserTest < Test::Unit::TestCase
 
   def test_parsing_replace_missing_environment_variable
     changeEnv({ TEST_VALID_ENV_NAME => TEST_VALID_ENV_VALUE }) do
-      result = YamlEnvironmentParser.parse(TEST_YAML_REPLACE_EMPTY_STRING)
+      result = Util::YamlEnvironmentParser.parse(TEST_YAML_REPLACE_EMPTY_STRING)
       fred = result['object']['obj1']
       sheila = result['another']['obj1']
       assert(fred == "(No value found for #{TEST_EMPTY_ENV})", "Didn't get empty/missing result, got #{fred}")
@@ -105,7 +107,7 @@ class RCMYamlParserTest < Test::Unit::TestCase
   private
 
   def createTestParser
-    YamlEnvironmentParser.new
+    Util::YamlEnvironmentParser.new
   end
 
 end

@@ -1,13 +1,14 @@
 require 'sinatra/base'
+
 require 'util/lumber'
 
-require 'submitException'
-require 'processDataReturnObject'
-require 'responseGenerator'
+require 'rcm/submitException'
+require 'rcm/processDataReturnObject'
+require 'rcm/responseGenerator'
 
-require 'rcmConfig'
-require 'rcmJsonHandler'
-require 'rcmEmailHandler'
+require 'rcm/rcmConfig'
+require 'rcm/rcmJsonHandler'
+require 'rcm/rcmEmailHandler'
 
 
 ##

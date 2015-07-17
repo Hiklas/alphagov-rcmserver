@@ -1,6 +1,7 @@
-require 'util/lumber'
 require 'yaml'
-require 'yamlEnvironmentParser'
+
+require 'util/lumber'
+require 'util/yamlEnvironmentParser'
 
 
 module RCM
@@ -142,7 +143,7 @@ module RCM
 
         @@log.debug('Loading yaml config from "%s" ...', configFilename)
 
-        @config = YamlEnvironmentParser.parse(File.read(configFilename))
+        @config = Util::YamlEnvironmentParser.parse(File.read(configFilename))
 
         @@log.debug('... loaded')
       end

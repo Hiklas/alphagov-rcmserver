@@ -1,7 +1,10 @@
-require 'util/lumber'
-require 'rcmServer'
+
 require 'test/unit'
 require 'rack/test'
+
+require 'util/lumber'
+require 'rcm/rcmServer'
+
 
 class RCMServerAppTest < Test::Unit::TestCase
 

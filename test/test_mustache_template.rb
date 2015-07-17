@@ -1,7 +1,9 @@
-require 'util/lumber'
+
 require 'test/unit'
 require 'mustache'
 require 'json'
+
+require 'util/lumber'
 
 
 class RCMMustacheTemplateTest < Test::Unit::TestCase
