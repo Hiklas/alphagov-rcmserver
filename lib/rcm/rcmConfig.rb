@@ -189,8 +189,8 @@ module RCM
       end
 
       def evidence_config(key)
-        value = @config[CONFIG_EMAIL][key]
-        @@log.debug('Email config, key=%s, value=%s', key, value)
+        value = @config[CONFIG_EVIDENCE][key]
+        @@log.debug('Evidence config, key=%s, value=%s', key, value)
         value
       end
 
