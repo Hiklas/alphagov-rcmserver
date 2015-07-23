@@ -21,8 +21,10 @@ module RCM
     CONFIG_RECIPIENT = 'recipient'
     CONFIG_FROM = 'from'
     CONFIG_SUBJECT = 'subject'
-    CONFIG_PGP_KEY = 'pgp'
     CONFIG_DISABLED = 'disabled'
+
+    CONFIG_ENCRYPTION = 'encryption'
+    CONFIG_PGP_KEY = 'pgp_key'
 
     CONFIG_FORMAT = 'format'
     CONFIG_TEMPLATE = 'template'
@@ -134,6 +136,14 @@ module RCM
       email_server_config(CONFIG_EMAIL_DOMAIN)
     end
 
+    def email_encryption_disabled
+      email_encryption_config(CONFIG_DISABLED)
+    end
+
+    def email_encryption_key
+      email_encryption_config(CONFIG_PGP_KEY)
+    end
+
 
     private
 
@@ -173,6 +183,12 @@ module RCM
       def email_server_config(key)
         value = @config[CONFIG_EMAIL][CONFIG_SERVER][key]
         @@log.debug('Email server config, key=%s, value=%s', key, value)
+        value
+      end
+
+      def email_encryption_config(key)
+        value = @config[CONFIG_EMAIL][CONFIG_ENCRYPTION][key]
+        @@log.debug('Email encryption config, key=%s, value=%s', key, value)
         value
       end
 

@@ -1,4 +1,5 @@
 require 'mail'
+require 'mail-gpg'
 require 'mustache'
 
 require 'util/lumber'
@@ -57,12 +58,15 @@ module RCM
       from_value = @rcmConfig.email_from
       recipient_value = @rcmConfig.email_recipient
       subject_value = @rcmConfig.email_subject
+      pgp_disabled_value = @rcmConfig.email_encryption_disabled
+      pgp_key_value = @rcmConfig.email_encryption_key
 
       mail = Mail.new do
         from     from_value
         to       recipient_value
         subject  subject_value
         body     parsed_data
+        gpg encrypt: (pgp_disabled_value != 'true'), keys: { from_value => pgp_key_value }
       end
 
       response.data = mail

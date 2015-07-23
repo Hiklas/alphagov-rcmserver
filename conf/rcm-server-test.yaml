@@ -20,6 +20,58 @@ email:
     subject: "The Grim Squeaker"
     disabled: ${EMAIL_DISABLED}
 
+  encryption:
+    # Set to true for testing
+    disabled: true
+    pgp_key:  '-----BEGIN PGP PUBLIC KEY BLOCK-----
+               Version: SKS 1.1.5
+               Comment: Hostname: keyserver.secretresearchfacility.com
+
+               mQINBFVchUsBEADpvcHE6VQ9O80vcEnGVMVj8mmpCHQLLgg2nWqo8mSVuX3/1nwM7EdcfUJi
+               JKcm/w/SN2lvEZ7YETphkBzGwfcceBD7PoFJZp70F/UnBJTtpxexPIRoinW1TXFcqdMCMTVT
+               qr11HtrKHrbNQQor1BfLGQZQfZfPL4dRFjue2/mblSIbqkcqefVFoLJW2HvM0rSFmVyx1kXI
+               7fYmH/gO8tr/BTcbUe1D2Fq+Rtp1pucFj7Nr8Exud9REUtRPaVUletq7vsY4W7lU/I70HCwg
+               hy7lDmp+BWqEhyOKTHBd/8icGDf53WtjXK155Ni4kktxDkPRJ5uogYBas0gnlPxmnFyPM5ne
+               SyudDYdyqFxYCQs4P9v8SseFUwrbLm/EinWbWywApCVGnK4Gl6iSg6u22y/epD2H9xUHQtU4
+               kGVn1pPhq27ezrbuj7tAooPPWOgP32Ld/AaDlthA3MVFLnNTaE7PiTjUl86vUDbOpgtHT76p
+               m036qErrkSpnydPmAp7Vp8GV+6nzC2GBXrYDBqPYB03LC/bILyM+CNr19we1HhIWsxYi4kdz
+               8rGusmxuhrVbqdBu1VT6wwrVUzyEwuQr0gQF4mTnQwXQKkhmJXKchyh1aUYWTofaL9b2xsdR
+               3DHa6uEmi/yPptk0LIZDy31pG8iK/lYqYbx83JdgZ2bxOSthOwARAQABtChGaW9uYSBCaWFu
+               Y2hpIDxmaW9uYWhpa2xhc2R3cEBnbWFpbC5jb20+iQI9BBMBCgAnBQJVXIVLAhsDBQkHhh+A
+               BQsJCAcDBRUKCQgLBRYCAwEAAh4BAheAAAoJEN3b+PpXoLpkXhIP/Ri9L2WyhbJaFO9Dbc2U
+               CfIABMGKR9DmbkauagNK7C7o3nmQsfc18xKB1hZ7ADroCWp9UlFGjBYO4vG6qjqtm5HhUWha
+               VUljcU2fhsCuV4JsQp6aSjg8r1+7Nug7hcbPevw7UlbygIKLkdq/WrIv4QLuZ2GY99MOgI8d
+               isyuO+ETN6JDymLX3O1peBOflWgVfrfE9tueGOlaLUOx+lDbYKOzk7fEi7EmZrZIxR+WKae/
+               gdcgsigR+MZh7qaquKJRRwFmh6/dod9p7RVZVIEr17uLOni3ntiy4X0ispfeGu9zqbH/95tv
+               I54cIphATedd7635kKx+8tjMU4V1WEaD9sXYSHPzYGK1IpRJyfcf8fMFWOmqVxZhA2JCod71
+               dfqk4TXguSJiVT+NHCMpCOmwU1urNDZA02KxuvTfyGvXVM8fsPeWyPzeTXh7HfxeqcYwcCol
+               E2w+6MM1i/DUXfCOBC8D4lC91aVHUVf8uzAAuXVA48AzlQ5/GBa1AUevHOsAWFbiimXWHggI
+               74cAzUMDO8ggBDduM9rCH4CdNBprNvz3ekZCwePnHWRgv0TzbGUEYAZnHGVcgN7lkSFCsY9w
+               kgBKygMA0aszRUd4RAlKB38q2wKUprlRpSNMAUaz7VU0csIyJAWfm7XZVp9365DjwWEzu1Bj
+               IxetKX9+RM79FotYuQINBFVchUsBEADakEgLI1fNuw9JtREyeN2EQ8ElZnRTvIw8CLx5PEvh
+               Q1r/zA1nVQZhn/ffN1hcaZKGGVCq7Zf61nzOZUMatyQ3IE6XcCSm9CUl2AKTBWP6LUpC9l7s
+               0QNHDrYbhc0j5Fk/9p86DwjU1NGWWD2usvWO3KXGYaqjkXQzwc6C1DHJgKPdViXCHSm8uFoy
+               6zRwmGw4Dw7Q8sOtnW8QxGrhCrrB4Xk268liLI+/qXiT/mDGZ5aPqm9fUns0v6SpxO0mV3kT
+               v4CpEUSl1BrshyUFeRD6jYvgKgpxoUCBg9q0jvejiXRGmOtj0hZJimjwoeeOxOSPRY0DvtCL
+               hdodblIKc+38aODV+MY8R+2ZP5/wZs17Ax6KqKRdAXEYsjjkhimqvoWOtXrGePoOaQgSloAR
+               +9t/IJd97SlKC4Iob2Z0CjV35VDMlJ93zqL/0+oVu/nTlAaiOqa1E5R6L0vM6NNA8OSEea83
+               y1FocwsRH02ZICth4FmvDQI0AJDIcwaWA5KvfLoG8bReG3LCi51nG1NOsNSoDg0VBKxkmU8D
+               8tngPubsq6hIfOTVoqaLI8SoHXQnTWiOZsdTwugNkyXSj3ID1uD/lulFcfvAGMUuZcBaXT4T
+               c3E13bXuU51ymEK+VKXySbLJTmM/v1yJ+q9Y+RU4Zh0b1+WNvsEXFfnOcWLCXLh6BwARAQAB
+               iQIlBBgBCgAPBQJVXIVLAhsMBQkHhh+AAAoJEN3b+PpXoLpknxoP/3JL3qxJT53isXIWo4Lp
+               iVY+PI8PH6I8233coMoy0jfT9G9UPdUs28jZZuEmUB83hky9CkcYzQfTPuAgg5u4favYp/ng
+               Ss+oG0/RuoSDhRZTd24wkAZdvEIJHvIZrP/JILcOCOUnibNOZXpyXbV7GEwvr6Hu24khMF2D
+               CdqC3UMi/pK7IQRnse3VzToV5e5lAo/gbwYaOFKoMdTVdRKHI3pIO+CdNwAZkzIpnCPYmThh
+               h6rMOnTuTL6WGmeLjfZ4bMA9NjIsPpRR5yl0ftYv8KpvVZJ4lg5YMlGN9m/5jLDw3pQWosW+
+               2bsUv42bDFT4xykc076fL46UzwPSf1ZNhzYaPkGwOKu0uUV0vmesg76PzNF8STXl3GoRJM5/
+               D2VXb9btNu6prwuZ8+MqwjZetaBD8K3FATrzZE6g7Ajyc2tyqY+G/4fVGVLU04WTQHr4Kid6
+               2WlitrtUkA+C/1hWpjPhEsZ+mPAtt09W8EMODBPVHKfXM2Ib7OfW0s4TO62btfPk0PyH8QKk
+               /0auQ2RNoeYhO2AKxtW2F898hAOU7IoP9+FlhNj3ljOAEYT7e491GA2GSjEH6jWQfO9mJ3VP
+               B06m4Epi/Hb5chsMBVIuxkQRMXBv/D7zNh2X4M5NAYAWXFIKRzWRB/tzt4y6Ia29M0FMVGkr
+               TM+t36bOYMP23WRh
+               =iwu4
+               -----END PGP PUBLIC KEY BLOCK-----'
+
   format:
     template: conf/email-template-plain.mustache
 
