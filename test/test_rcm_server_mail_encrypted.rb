@@ -14,13 +14,10 @@ class RCMServerAppMailEncryptedTest < Test::Unit::TestCase
 
   @@log = lumber("RCMServerAppMailEncryptedTest")
 
-  # This includes the changeEnv method for testing with different environment variable settings
-  include TestUtils
-
   SIMPLE_BODY = 'This is a simple form'
-  SIMPLE_FROM = 'wibble@wibble.wobble'
-  SIMPLE_RECIPIENT =  'terrypratchett@discworld.atuin'
-  SIMPLE_SUBJECT = 'The Grim Squeaker'
+  SIMPLE_FROM = 'fiona@silly.com'
+  SIMPLE_RECIPIENT =  'death@discworld.atuin'
+  SIMPLE_SUBJECT = 'The Grim Squeaker Returns'
 
 
 
@@ -33,8 +30,9 @@ class RCMServerAppMailEncryptedTest < Test::Unit::TestCase
   end
 
 
-  def test_encryption_disabled
-    @@log.debug("Testing email creation with encryption disabled")
+
+  def test_send_email_encryption_disabled
+    @@log.debug("Testing email creation with encryption enabled")
 
     result = @emailHandler.create_email(SIMPLE_BODY)
 
@@ -42,18 +40,32 @@ class RCMServerAppMailEncryptedTest < Test::Unit::TestCase
 
     assert(resultData.instance_of?(Mail::Message), "We didn't get a Mail::Message object, got #{resultData.class}")
 
-    emailBody = resultData.body
+    @@log.debug("Delivery handler: %s", resultData.delivery_handler)
 
-    assert(emailBody.instance_of?(Mail::Body), "We didn't get a Mail::Body object, got #{emailBody.class}")
+    @emailHandler.send_email(resultData)
 
-    emailBodyString = emailBody.decoded
+    deliveries = Mail::TestMailer.deliveries
+    assert(deliveries!=nil, "Got nil deliveries")
 
-    assert(emailBodyString == SIMPLE_BODY, "Didn't get expected body '#{SIMPLE_BODY}', got #{emailBody}")
+    numberDeliveries = deliveries.length
+    assert(numberDeliveries == 1, "Didn't get 1 delivery, got #{numberDeliveries}")
+
+    delivery = deliveries.first
+
+    from = delivery.from[0]
+    to = delivery.to[0]
+    subject = delivery.subject
+    body = delivery.body
+
+    assert(from == SIMPLE_FROM, "From is not correct, is #{from}")
+    assert(to == SIMPLE_RECIPIENT, "To is not correct, is #{to}")
+    assert(subject == SIMPLE_SUBJECT, "Subject is not correct, is #{subject}")
+    assert(body == SIMPLE_BODY, "Body is not correct, is '#{body}' expected '#{SIMPLE_BODY}'")
   end
 
 
   def test_encryption_enabled
-    @@log.debug("Testing email creation with encryption enabled")
+    @@log.debug('Testing email creation with encryption enabled')
 
     # This should allow Mail PGP to encrypt the email
     @rcmConfig.email_encryption_disabled = 'false'
@@ -64,13 +76,36 @@ class RCMServerAppMailEncryptedTest < Test::Unit::TestCase
 
     assert(resultData.instance_of?(Mail::Message), "We didn't get a Mail::Message object, got #{resultData.class}")
 
-    emailBody = resultData.body
+    @@log.debug('*** before ***')
+    @@log.debug('Delivery handler: %s', resultData.delivery_handler)
+    @@log.debug('Mail.gpg: %s', resultData.gpg)
 
-    assert(emailBody.instance_of?(Mail::Body), "We didn't get a Mail::Body object, got #{emailBody.class}")
+    @emailHandler.send_email(resultData)
 
-    emailBodyString = emailBody.decoded
+    @@log.debug('*** after ***')
+    @@log.debug('Mail content type: %s', resultData.content_type)
+    @@log.debug('Mail mime type: %s', resultData.mime_type)
+    @@log.debug('Delivery handler: %s', resultData.delivery_handler)
+    @@log.debug('Mail.gpg: %s', resultData.gpg)
 
-    assert(emailBodyString == SIMPLE_BODY, "Didn't get expected body '#{SIMPLE_BODY}', got #{emailBody}")
+    deliveries = Mail::TestMailer.deliveries
+    assert(deliveries!=nil, "Got nil deliveries")
+
+    numberDeliveries = deliveries.length
+    assert(numberDeliveries == 1, "Didn't get 1 delivery, got #{numberDeliveries}")
+
+    delivery = deliveries.first
+
+    @@log.debug('Delivery.encrypted? %s', delivery.encrypted?)
+    from = delivery.from[0]
+    to = delivery.to[0]
+    subject = delivery.subject
+    body = delivery.body
+
+    assert(from == SIMPLE_FROM, "From is not correct, is #{from}")
+    assert(to == SIMPLE_RECIPIENT, "To is not correct, is #{to}")
+    assert(subject == SIMPLE_SUBJECT, "Subject is not correct, is #{subject}")
+    assert(body != SIMPLE_BODY, "Body is not correct, is '#{body}' expected '#{SIMPLE_BODY}'")
   end
 
 
@@ -82,7 +117,31 @@ class RCMServerAppMailEncryptedTest < Test::Unit::TestCase
       config_object = RCM::RCMConfig.new
 
       class << config_object
-        attr_accessor :email_encryption_disabled
+
+        def email_encryption_disabled
+          @@log.debug("Returning encryption disabled: %s", @email_encryption_disabled)
+          @email_encryption_disabled
+        end
+
+        def email_encryption_disabled=(disabled_value)
+          @@log.debug("Setting email_encryption_disabled = %s", disabled_value)
+          @email_encryption_disabled = disabled_value
+        end
+
+        def email_from
+          @@log.debug("Returning from value")
+          RCMServerAppMailEncryptedTest::SIMPLE_FROM
+        end
+
+        def email_recipient
+          @@log.debug("Returning recipient")
+          RCMServerAppMailEncryptedTest::SIMPLE_RECIPIENT
+        end
+
+        def email_subject
+          @@log.debug("Returning subject")
+          RCMServerAppMailEncryptedTest::SIMPLE_SUBJECT
+        end
       end
 
       config_object

@@ -61,12 +61,18 @@ module RCM
       pgp_disabled_value = @rcmConfig.email_encryption_disabled
       pgp_key_value = @rcmConfig.email_encryption_key
 
+      encrypt = (pgp_disabled_value == 'false')
+      pgp_keys = { recipient_value => pgp_key_value }
+
+      @@log.debug('Encrypt or not: %s', encrypt)
+      @@log.debug('Pgp keys: %s', pgp_keys)
+
       mail = Mail.new do
         from     from_value
         to       recipient_value
         subject  subject_value
         body     parsed_data
-        gpg encrypt: (pgp_disabled_value != 'true'), keys: { from_value => pgp_key_value }
+        gpg encrypt: encrypt, keys: pgp_keys
       end
 
       response.data = mail
@@ -92,7 +98,7 @@ module RCM
         response.data = generate_success_response('Email skipped')
       else
         @@log.debug('About to send the email')
-        email_data.deliver!
+        email_data.deliver
         response.data = generate_success_response('Email sent')
         @@log.debug('Email sent')
       end
